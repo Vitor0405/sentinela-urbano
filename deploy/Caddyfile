@@ -1,0 +1,39 @@
+# Sentinela Urbano: web server for the production-like stack.
+# - serves the built PWA and proxies /api to the API container;
+# - HTTPS: "tls internal" (local CA) for localhost/LAN tests; on a real domain, remove
+#   TLS_DIRECTIVE and Caddy obtains a Let's Encrypt certificate by itself;
+# - security headers, including a Content-Security-Policy that only allows our own code
+#   and the configured map tile server.
+
+{$SITE_ADDRESS:https://localhost:8443} {
+	{$TLS_DIRECTIVE:tls internal}
+
+	encode zstd gzip
+
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		# Origin only, never the path. The OSM tile servers block requests without a Referer.
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(self), geolocation=(self), microphone=(), payment=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: {$CSP_TILE_HOSTS:https://tile.openstreetmap.org https://*.tile.openstreetmap.org}; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+		-Server
+	}
+
+	# The service worker and the HTML must always be revalidated; hashed assets never change.
+	@nocache path /sw.js /registerSW.js /index.html /manifest.webmanifest
+	header @nocache Cache-Control "no-cache"
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+}

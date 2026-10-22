@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Sentinela Urbano: artigo</title>
+<style>
+  @page { size: A4; margin: 30mm 20mm 20mm 30mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.5; color: #111; text-align: justify; hyphens: auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  p { margin: 0 0 0.5em; text-indent: 1.25cm; }
+  p.noindent { text-indent: 0; }
+  .title, .subtitle, .authors, .affil { text-indent: 0; }
+  .title { text-align: center; font-weight: bold; font-size: 14pt; text-transform: uppercase; line-height: 1.3; margin: 0 0 6px; }
+  .subtitle { text-align: center; font-size: 12pt; margin: 0 0 18px; }
+  .authors { text-align: center; font-size: 11pt; line-height: 1.4; margin-bottom: 4px; }
+  .affil { text-align: center; font-size: 10pt; line-height: 1.3; color: #333; margin-bottom: 22px; }
+  .abstract { font-size: 11pt; line-height: 1.15; margin: 0 0 14px; }
+  .abstract .label { font-weight: bold; text-align: center; text-transform: uppercase; margin-bottom: 6px; text-indent: 0; }
+  .abstract p { text-indent: 0; margin-bottom: 6px; }
+  .kw { text-indent: 0; }
+  h1 { font-size: 12pt; font-weight: bold; text-transform: uppercase; margin: 22px 0 8px; text-align: left; break-after: avoid; }
+  h2 { font-size: 12pt; font-weight: bold; margin: 16px 0 6px; text-align: left; break-after: avoid; }
+  ul, ol { margin: 0 0 0.5em 1.25cm; padding: 0; }
+  li { margin-bottom: 2px; }
+  figure { margin: 12px 0 14px; text-align: center; break-inside: avoid; }
+  figcaption, .tcap { font-size: 10pt; line-height: 1.2; text-align: center; margin-bottom: 4px; }
+  .source { font-size: 10pt; text-align: center; margin-top: 4px; text-indent: 0; }
+  .shots { display: flex; gap: 10px; justify-content: center; align-items: flex-start; }
+  .shots img { border: 0.5pt solid #999; display: block; object-fit: cover; object-position: top center; }
+  table { width: 100%; border-collapse: collapse; font-size: 10pt; line-height: 1.25; margin: 4px 0 2px; break-inside: avoid; }
+  th, td { border-top: 0.75pt solid #000; border-bottom: 0.75pt solid #000; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { font-weight: bold; }
+  td.num, th.num { text-align: right; }
+  .tablewrap { break-inside: avoid; margin: 12px 0 14px; }
+  .eq { text-align: center; font-style: italic; margin: 8px 0 10px; text-indent: 0; }
+  .eq .n { float: right; font-style: normal; }
+  .refs p { text-indent: 0; text-align: left; line-height: 1.15; margin-bottom: 10px; }
+  .box { border: 0.75pt solid #000; padding: 8px 12px; margin: 10px 0; font-size: 11pt; line-height: 1.35; break-inside: avoid; }
+  .box p { text-indent: 0; }
+  .arch text { font-family: 'Times New Roman', serif; }
+</style>
+</head>
+<body>
+
+<p class="title">Sentinela Urbano: vigilância comunitária georreferenciada de risco de arbovirose com priorização por índice de risco e validação frente ao LIRAa</p>
+<p class="subtitle">Projeto Integrador · Engenharia da Computação</p>
+<p class="authors">João Vitor Rodrigues Alves Medeiros · Luiz Gustavo Andrade França · Vinicius Carvalho Fonseca<br />Israel Rodrigues de Souza Teles · Samuel Silva Santos</p>
+<p class="affil">Curso de Engenharia da Computação · Montes Claros (MG) · 2026</p>
+
+<div class="abstract">
+  <p class="label">Resumo</p>
+  <p>
+    As arboviroses transmitidas pelo <i>Aedes aegypti</i> (dengue, zika e chikungunya) dependem de condições ambientais
+    do próprio bairro, e o morador costuma ser o primeiro a perceber os focos. Essa informação, porém, raramente chega à
+    vigilância municipal de forma utilizável. Este trabalho apresenta o Sentinela Urbano, uma aplicação web progressiva
+    (PWA) de vigilância comunitária, desenvolvida para Montes Claros (MG), em que moradores registram focos de risco com
+    foto e localização. Agentes de saúde atendem uma fila priorizada por um índice de risco que combina peso do tipo,
+    tempo em aberto, reincidência no mesmo ponto e proximidade de escolas e unidades de saúde. A prefeitura é notificada
+    automaticamente e, quando não responde, o silêncio torna-se público e documentável para a ouvidoria. O sistema também
+    agrega o índice por setor, normalizado pela população, e o compara com o Levantamento Rápido de Índices para
+    <i>Aedes aegypti</i> (LIRAa) por meio da correlação de postos de Spearman. A solução foi construída em três fases,
+    com React, FastAPI e PostgreSQL/PostGIS sobre dados do OpenStreetMap, e verificada por 164 testes automatizados. Os
+    resultados mostram a viabilidade técnica do ciclo completo, do registro à confirmação da resolução pelo morador. A
+    validação epidemiológica depende de dados reais da vigilância municipal e de um piloto em campo.
+  </p>
+  <p class="kw"><b>Palavras-chave:</b> arboviroses; vigilância participativa; geoprocessamento; <i>Aedes aegypti</i>; saúde digital.</p>
+</div>
+
+<div class="abstract">
+  <p class="label">Abstract</p>
+  <p>
+    Arboviral diseases transmitted by <i>Aedes aegypti</i> (dengue, Zika and chikungunya) depend on local environmental
+    conditions, and residents are often the first to notice breeding sites, yet this information rarely reaches municipal
+    surveillance in a usable form. This paper presents Sentinela Urbano, a community surveillance progressive web
+    application built for Montes Claros, Brazil, in which residents report risk sites with a photo and location. Health
+    agents work through a queue prioritized by a risk index that combines type weight, days open, recurrence at the same
+    spot and proximity to schools and health units. The municipality is notified automatically and, when it does not
+    respond, its silence becomes public and can be documented for the ombudsman. The system aggregates the index by
+    sector, normalized by population, and compares it with the official LIRAa survey using Spearman's rank correlation.
+    It was built in three phases with React, FastAPI and PostgreSQL/PostGIS on OpenStreetMap data and verified by 164
+    automated tests. Results show the technical feasibility of the full cycle; epidemiological validation requires real
+    municipal data and a field pilot.
+  </p>
+  <p class="kw"><b>Keywords:</b> arboviruses; participatory surveillance; geoprocessing; <i>Aedes aegypti</i>; digital health.</p>
+</div>
+
+<h1>1 Introdução</h1>
+<p>
+  Em 2024, o Brasil registrou cerca de 6,6 milhões de casos prováveis de dengue e 6.022 mortes, o pior resultado da
+  série histórica (PODER360, [2025?]). Em 2026, os números caíram de forma expressiva: até 11 de abril foram 227,5 mil
+  casos prováveis, contra 916,4 mil no mesmo período do ano anterior (AGÊNCIA BRASIL, 2026). Essa queda, contudo, é
+  atribuída a condições climáticas favoráveis, à vacinação de grupos específicos e a campanhas pontuais, e não a uma
+  vigilância contínua capaz de agir antes do adoecimento.
+</p>
+<p>
+  O problema que motiva este trabalho não é a falta de informação, mas a sua dispersão. Quem enxerga primeiro o pneu
+  com água, o terreno com entulho ou o esgoto na rua é o morador. Os canais existentes (telefone da ouvidoria,
+  atendimento presencial ou visita eventual do agente) exigem contato em horário comercial e não registram foto,
+  coordenada nem protocolo. Sem retorno, o morador desiste de avisar. Do outro lado, o agente de combate a endemias faz
+  varredura por rotina, quarteirão por quarteirão, sem saber de antemão onde estão os focos.
+</p>
+<p>
+  Alinhado ao Objetivo de Desenvolvimento Sustentável 3, meta 3.3, que trata do combate às doenças tropicais
+  negligenciadas (NAÇÕES UNIDAS BRASIL, 2026), o <b>objetivo geral</b> deste trabalho é desenvolver uma plataforma de
+  vigilância comunitária de risco de arbovirose que transforme a observação do morador em dado georreferenciado,
+  priorizado e acompanhável. Os <b>objetivos específicos</b> são:
+</p>
+<ol>
+  <li>permitir o registro de focos com foto e localização em menos de um minuto;</li>
+  <li>priorizar o atendimento por um índice de risco, e não pela ordem de chegada;</li>
+  <li>fechar o ciclo com a confirmação da resolução pelo próprio morador;</li>
+  <li>tornar visível e documentável a ausência de resposta do poder público;</li>
+  <li>comparar o índice gerado pela comunidade com o LIRAa do mesmo setor, para verificar sua validade.</li>
+</ol>
+<p>
+  O artigo está organizado da seguinte forma: a Seção 2 apresenta o referencial teórico; a Seção 3, a metodologia e as
+  decisões de projeto; a Seção 4, os resultados obtidos; a Seção 5 discute contribuições e limitações; e a Seção 6
+  traz as considerações finais e os trabalhos futuros.
+</p>
+
+<h1>2 Referencial teórico</h1>
+<h2>2.1 Arboviroses e controle do <i>Aedes aegypti</i></h2>
+<p>
+  Dengue, zika e chikungunya são transmitidas pelo mosquito <i>Aedes aegypti</i>, que se reproduz em recipientes com água
+  parada em ambiente urbano: pneus, caixas d'água destampadas, calhas, vasos e lixo acumulado. Por isso, as diretrizes
+  nacionais enfatizam a eliminação de criadouros e a mobilização da população como componentes centrais do controle
+  vetorial (BRASIL, 2009). A eficácia dessas ações depende de localizar os focos a tempo, antes que o criadouro
+  produza sucessivas gerações do vetor.
+</p>
+<h2>2.2 Levantamento Rápido de Índices para <i>Aedes aegypti</i> (LIRAa)</h2>
+<p>
+  O LIRAa é o levantamento amostral do Ministério da Saúde que estima a infestação do vetor por estratos do município. O
+  principal indicador é o Índice de Infestação Predial (IIP), percentual de imóveis com larvas. A classificação adotada
+  considera o IIP inferior a 1% como satisfatório, entre 1% e 3,9% como alerta e igual ou superior a 4% como risco.
+  O levantamento também calcula o Índice de Breteau, número de recipientes positivos por 100 imóveis (BRASIL, 2013). O
+  LIRAa é, portanto, a referência oficial adequada para avaliar se um índice gerado pela comunidade aponta para as
+  mesmas áreas críticas.
+</p>
+<h2>2.3 Vigilância participativa e informação geográfica voluntária</h2>
+<p>
+  Goodchild (2007) descreve os cidadãos como "sensores" capazes de produzir informação geográfica voluntária em escala e
+  com rapidez inalcançáveis por levantamentos formais. O próprio OpenStreetMap, base cartográfica deste trabalho, é
+  resultado desse modelo (OPENSTREETMAP CONTRIBUTORS, 2026). Essa abordagem tem limitações conhecidas que precisam ser
+  tratadas no desenho do sistema: registros falsos ou motivados por conflitos, e viés de cobertura, já que regiões com
+  mais acesso a smartphones tendem a gerar mais dados.
+</p>
+<h2>2.4 Privacidade e proteção de dados</h2>
+<p>
+  A Lei Geral de Proteção de Dados Pessoais (BRASIL, 2018) impõe, entre outros, os princípios da finalidade e da
+  necessidade, isto é, a coleta do mínimo necessário. No contexto de denúncias ambientais há ainda um risco
+  específico: a localização exata e a fotografia de um imóvel podem identificar pessoas e expor moradores a conflitos de
+  vizinhança. O tratamento da localização, portanto, é um requisito de projeto, e não um detalhe de implementação.
+</p>
+
+<h1>3 Metodologia</h1>
+<h2>3.1 Requisitos e organização do trabalho</h2>
+<p>
+  Os requisitos partiram de três documentos produzidos pela equipe: o projeto original, o <i>product backlog</i> com 14
+  histórias de usuário e um documento de melhorias. Este último substituiu o mapa de densidade por um índice de
+  risco, incluiu a identificação de pontos crônicos, a confirmação pelo morador, a resposta à ausência da prefeitura e
+  a comparação com o LIRAa, e acrescentou uma análise de limitações e riscos. Foram definidos três perfis de usuário
+  (morador, agente de saúde e gestor) e oito tipos de risco: água parada, lixo e entulho, vazamento de água, terreno
+  baldio abandonado, esgoto a céu aberto, animal morto, foco de roedores ou escorpiões e queima de resíduos.
+</p>
+<p>
+  O desenvolvimento foi incremental, em três fases, cada uma encerrada com demonstração, verificação e aprovação antes
+  da seguinte: (1) estrutura, modelo de dados, registro e mapa público; (2) fila por risco, pontos crônicos,
+  encerramento com foto, confirmação do morador e mapa de calor; (3) prazos, documento para a ouvidoria, setores,
+  comparação com o LIRAa e painel de indicadores. O piloto foi delimitado ao município de Montes Claros (MG). O
+  desenvolvimento contou com o apoio de um assistente de programação baseado em inteligência artificial, sob direção e
+  revisão da equipe.
+</p>
+
+<h2>3.2 Arquitetura</h2>
+<p>
+  A solução adota uma arquitetura em três camadas, sem dependência de serviços pagos (Figura 1). O cliente é uma
+  aplicação web progressiva em React e TypeScript, instalável no celular, com acesso à câmera e ao GPS, e mapa
+  interativo com a biblioteca Leaflet sobre o OpenStreetMap (LEAFLET, 2026). O servidor é uma API REST em Python com
+  FastAPI, responsável pelas regras de negócio, pela autenticação, pelo envio de e-mails e pela geração de documentos. O
+  banco de dados é o PostgreSQL com a extensão PostGIS (POSTGIS PROJECT, 2026), que armazena os pontos no sistema de
+  referência WGS 84 (SRID 4326) e calcula distâncias em metros. Todo o ambiente é executado em contêineres Docker.
+</p>
+<figure>
+  <figcaption>Figura 1 – Arquitetura do Sentinela Urbano</figcaption>
+  <svg class="arch" viewBox="0 0 640 210" width="100%" style="max-width:15.5cm">
+    <defs><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#333"/></marker></defs>
+    <g font-size="12">
+      <rect x="10" y="20" width="170" height="92" rx="6" fill="#f2f2f2" stroke="#333"/>
+      <text x="95" y="42" text-anchor="middle" font-weight="bold">Aplicativo (PWA)</text>
+      <text x="95" y="62" text-anchor="middle">React + TypeScript</text>
+      <text x="95" y="79" text-anchor="middle">Leaflet + OpenStreetMap</text>
+      <text x="95" y="96" text-anchor="middle">câmera e GPS</text>
+      <rect x="235" y="20" width="170" height="92" rx="6" fill="#f2f2f2" stroke="#333"/>
+      <text x="320" y="42" text-anchor="middle" font-weight="bold">API REST</text>
+      <text x="320" y="62" text-anchor="middle">Python + FastAPI</text>
+      <text x="320" y="79" text-anchor="middle">regras, autenticação</text>
+      <text x="320" y="96" text-anchor="middle">e-mail, PDF</text>
+      <rect x="460" y="20" width="170" height="92" rx="6" fill="#f2f2f2" stroke="#333"/>
+      <text x="545" y="42" text-anchor="middle" font-weight="bold">Banco geográfico</text>
+      <text x="545" y="62" text-anchor="middle">PostgreSQL + PostGIS</text>
+      <text x="545" y="79" text-anchor="middle">view de risco</text>
+      <text x="545" y="96" text-anchor="middle">setores, LIRAa</text>
+      <line x1="180" y1="66" x2="233" y2="66" stroke="#333" marker-end="url(#a)"/>
+      <line x1="405" y1="66" x2="458" y2="66" stroke="#333" marker-end="url(#a)"/>
+      <rect x="235" y="148" width="170" height="46" rx="6" fill="#fff" stroke="#333" stroke-dasharray="4 3"/>
+      <text x="320" y="167" text-anchor="middle">E-mail (SMTP)</text>
+      <text x="320" y="184" text-anchor="middle">prefeitura e morador</text>
+      <line x1="320" y1="112" x2="320" y2="146" stroke="#333" marker-end="url(#a)"/>
+      <rect x="460" y="148" width="170" height="46" rx="6" fill="#fff" stroke="#333" stroke-dasharray="4 3"/>
+      <text x="545" y="167" text-anchor="middle">Overpass (OSM)</text>
+      <text x="545" y="184" text-anchor="middle">pontos sensíveis</text>
+      <line x1="545" y1="146" x2="545" y2="114" stroke="#333" marker-end="url(#a)"/>
+    </g>
+  </svg>
+  <p class="source">Fonte: elaborado pelos autores (2026).</p>
+</figure>
+<p>
+  O modelo de dados é versionado por migrações e é composto principalmente por: usuários; tipos de ocorrência com seus
+  pesos; coeficientes do índice; ocorrências (com o ponto em <i>geography</i>), fotos e histórico de situações;
+  confirmações de outros moradores; notificações por e-mail; pontos sensíveis; setores com população; e resultados do
+  LIRAa. As situações de uma ocorrência seguem o fluxo <i>aberta → em atendimento → resolvida pelo agente →
+  confirmada</i> ou <i>contestada</i>; a contestada volta para a fila do agente.
+</p>
+
+<h2>3.3 Índice de risco</h2>
+<p>
+  Em vez da densidade de registros, que confunde quantidade com risco, cada ocorrência recebe o índice da Equação 1:
+</p>
+<p class="eq">risco = peso<sub>tipo</sub> × dias<sub>aberto</sub> × fator<sub>reincidência</sub> × fator<sub>proximidade</sub><span class="n">(1)</span></p>
+<p class="noindent">
+  em que <i>dias<sub>aberto</sub></i> é o número de dias desde a abertura (mínimo 1);
+  <i>fator<sub>reincidência</sub></i> = 1 + 0,5 × <i>n</i>, sendo <i>n</i> o número de ocorrências já resolvidas a até 30 m;
+  e <i>fator<sub>proximidade</sub></i> vale 1,5 quando há escola, creche ou unidade de saúde a até 200 m, e 1 nos
+  demais casos. Os pesos iniciais estão na Tabela 1. Todos os coeficientes ficam em tabela no banco e podem ser
+  ajustados sem alterar o código.
+</p>
+<div class="tablewrap">
+  <p class="tcap">Tabela 1 – Tipos de risco, pesos iniciais e setor de destino</p>
+  <table>
+    <tr><th>Tipo de risco</th><th class="num">Peso</th><th>Setor de destino</th></tr>
+    <tr><td>Água parada</td><td class="num">5</td><td>Vigilância em Saúde – Controle de Endemias</td></tr>
+    <tr><td>Lixo e entulho</td><td class="num">3</td><td>Limpeza Urbana</td></tr>
+    <tr><td>Vazamento de água</td><td class="num">3</td><td>Saneamento – Abastecimento de Água</td></tr>
+    <tr><td>Terreno baldio abandonado</td><td class="num">2</td><td>Fiscalização de Posturas</td></tr>
+    <tr><td>Esgoto a céu aberto</td><td class="num">2</td><td>Saneamento – Esgotamento Sanitário</td></tr>
+    <tr><td>Animal morto; roedores ou escorpiões</td><td class="num">1</td><td>Vigilância em Saúde – Zoonoses</td></tr>
+    <tr><td>Queima de resíduos</td><td class="num">1</td><td>Meio Ambiente</td></tr>
+  </table>
+  <p class="source">Fonte: elaborado pelos autores (2026). Valores iniciais, a calibrar com a vigilância municipal.</p>
+</div>
+<p>
+  O índice é calculado pelo banco de dados no momento da consulta, por meio de uma <i>view</i> SQL, e nunca é
+  armazenado, pois cresce a cada dia em que a ocorrência permanece aberta. Os pontos sensíveis (escolas, creches,
+  hospitais, clínicas e demais estabelecimentos de saúde) são importados do OpenStreetMap por meio da API Overpass,
+  restrita ao contorno oficial do município, por um comando que pode ser agendado. O serviço externo nunca é consultado
+  durante o atendimento de requisições.
+</p>
+
+<h2>3.4 Pontos crônicos, confirmação comunitária e encerramento</h2>
+<p>
+  Uma nova ocorrência a até 30 m de outra já resolvida é marcada como <b>ponto crônico</b>. A partir de três
+  reincidências, o sistema recomenda notificar o proprietário em vez de realizar nova visita. Para mitigar denúncias
+  falsas, a prioridade de uma ocorrência só ultrapassa um teto configurável depois que <b>outro morador</b>, com conta,
+  confirma tê-la visto ("eu também vi"). Cada pessoa confirma uma única vez, e o autor não pode confirmar o próprio
+  registro. Como quase todas as ocorrências começam sem confirmação, a fila desempata pelo risco sem teto: as mais
+  graves aparecem primeiro, sem ultrapassar nenhuma ocorrência confirmada. O agente só encerra uma ocorrência anexando
+  uma foto do local. Em seguida, quem registrou recebe uma única pergunta, "o problema foi realmente resolvido?", e a
+  resposta negativa devolve a ocorrência à fila.
+</p>
+
+<h2>3.5 Privacidade desde o projeto</h2>
+<p>
+  O mapa público nunca exibe a coordenada exata. Cada ponto é deslocado para o centro de uma célula de uma grade fixa
+  de aproximadamente 100 m. Optou-se por uma grade determinística, e não por ruído aleatório, porque o ruído permitiria
+  tirar a média de vários registros do mesmo ponto e se aproximar da posição real. Pelo mesmo motivo, os filtros
+  espaciais da consulta pública operam sobre a coordenada já deslocada. O mapa público também não exibe fotos,
+  descrições nem autores. As fotos têm os metadados (EXIF), inclusive a posição do aparelho, removidos no envio. O
+  registro pode ser feito sem conta: o morador recebe um protocolo e um link privado de acompanhamento, cujo código é
+  transmitido no fragmento da URL e armazenado apenas como <i>hash</i>.
+</p>
+
+<h2>3.6 Ausência de resposta e ouvidoria</h2>
+<p>
+  O sistema conta os dias entre o aviso por e-mail à prefeitura e a primeira ação de um agente ou gestor. Essa contagem
+  é exibida publicamente em cada ocorrência. Vencido o prazo configurado (15 dias), quem registrou pode gerar um
+  documento em PDF com protocolo, fotos, coordenada, datas e histórico, para encaminhar à Ouvidoria Municipal. Assim, o
+  sistema mantém sua função mesmo sem integração formal com o município.
+</p>
+
+<h2>3.7 Indicadores por setor e comparação com o LIRAa</h2>
+<p>
+  Os setores são cadastrados como polígonos com população, e as ocorrências são associadas a eles espacialmente no
+  momento da consulta. Para evitar o viés de cobertura descrito na Seção 2.3, todo índice por setor é expresso por
+  1.000 habitantes. Para a comparação com o LIRAa, o <b>índice comunitário</b> de um setor é a soma dos pesos dos tipos
+  das ocorrências registradas nos 60 dias anteriores à data do levantamento, por 1.000 habitantes. A concordância
+  entre esse índice e o IIP é medida pela correlação de postos de Spearman (SPEARMAN, 1904), conforme a Equação 2, em
+  que <i>d<sub>i</sub></i> é a diferença entre as posições do setor <i>i</i> nos dois índices e <i>n</i> é o número de
+  setores. Na implementação, a correlação é calculada como a correlação de Pearson sobre postos médios, o que trata
+  corretamente os empates.
+</p>
+<p class="eq">ρ = 1 − (6 Σ d<sub>i</sub><sup>2</sup>) / (n (n<sup>2</sup> − 1))<span class="n">(2)</span></p>
+<p>
+  Os resultados do LIRAa são importados por planilha (CSV). A importação segue a regra "tudo ou nada": um único erro,
+  ou um setor não cadastrado, recusa o arquivo inteiro e informa as linhas com problema.
+</p>
+
+<h2>3.8 Verificação</h2>
+<p>
+  A verificação combinou testes automatizados de unidade e de integração, executados contra o PostgreSQL/PostGIS real,
+  com a execução manual do fluxo completo em ambiente de demonstração. Esse ambiente tem 60 ocorrências fictícias, 16
+  setores fictícios e um ciclo fictício do LIRAa, todos identificados como tais na interface.
+</p>
+
+<h1>4 Resultados</h1>
+<h2>4.1 Registro e mapa público</h2>
+<p>
+  O formulário de registro (Figura 2) permite fotografar o local, obter a posição pelo GPS ou marcá-la tocando no mapa,
+  escolher o tipo de risco (com o setor de destino exibido antes do envio) e, opcionalmente, identificar-se. Pontos
+  fora do município são recusados. Ao final, o morador recebe o protocolo e o link de acompanhamento, e a prefeitura,
+  um e-mail com protocolo, tipo, coordenada e foto anexada. O mapa público agrupa os pontos próximos e permite filtrar
+  por tipo e situação.
+</p>
+<figure>
+  <figcaption>Figura 2 – Registro no celular (à esquerda) e mapa público com localização aproximada (à direita)</figcaption>
+  <div class="shots">
+    <img src="capturas/report-location.png" style="width:3.9cm;height:6.7cm" alt="" />
+    <img src="capturas/map-public.png" style="width:11.3cm;height:6.7cm" alt="" />
+  </div>
+  <p class="source">Fonte: elaborado pelos autores (2026), com base cartográfica © OpenStreetMap contributors.</p>
+</figure>
+
+<h2>4.2 Fila do agente, pontos crônicos e mapa de calor</h2>
+<p>
+  A fila de atendimento (Figura 3) apresenta as ocorrências ativas em ordem decrescente de risco e explica cada posição:
+  ponto sensível próximo e distância, número de reincidências e confirmações de moradores. A página de detalhe decompõe
+  o cálculo, por exemplo "3 × 6 dias × 2,5 × 1 = 45" para um ponto com três resoluções anteriores, e exibe a
+  recomendação "notificar proprietário". A fila também pode ser ordenada pela proximidade do agente. No mapa, a camada
+  de calor soma o risco das ocorrências ativas por célula da grade de privacidade, em vez de contar registros. Na
+  primeira importação, foram obtidos 148 pontos sensíveis de Montes Claros.
+</p>
+<figure>
+  <figcaption>Figura 3 – Fila de atendimento ordenada pelo índice de risco</figcaption>
+  <div class="shots"><img src="capturas/queue.png" style="width:15.5cm;height:7.4cm;object-position:9% top" alt="" /></div>
+  <p class="source">Fonte: elaborado pelos autores (2026), com dados de demonstração.</p>
+</figure>
+
+<h2>4.3 Silêncio visível e documento para a ouvidoria</h2>
+<p>
+  Cada ocorrência exibe publicamente quantos dias está sem resposta. Na página de acompanhamento de quem registrou
+  (Figura 4), uma barra mostra o avanço em direção ao prazo. Vencido o prazo, é liberado o botão para gerar o documento
+  da ouvidoria, que reúne os dados da ocorrência, as fotos, o histórico e um texto de solicitação pronto para
+  assinatura. No ambiente de demonstração, cujas ocorrências fictícias foram distribuídas ao longo de dois meses, a
+  maior parte das ocorrências abertas já havia ultrapassado o prazo de 15 dias, o que ilustra como o acúmulo de
+  silêncio se torna visível.
+</p>
+<figure>
+  <figcaption>Figura 4 – Acompanhamento com prazo vencido (à esquerda) e pergunta ao morador após o encerramento (à direita)</figcaption>
+  <div class="shots">
+    <img src="capturas/tracking-overdue.png" style="width:4.6cm;height:8cm" alt="" />
+    <img src="capturas/question.png" style="width:4.6cm;height:8cm" alt="" />
+  </div>
+  <p class="source">Fonte: elaborado pelos autores (2026).</p>
+</figure>
+
+<h2>4.4 Painel de indicadores e comparação com o LIRAa</h2>
+<p>
+  O painel do gestor apresenta, para o período escolhido: ocorrências registradas, por tipo e por situação; quantidade
+  além do prazo; mediana e média do tempo até a primeira resposta e até a resolução; taxas de resolução confirmada e
+  de fechamento contestado; e o risco por 1.000 habitantes de cada setor, em mapa e tabela exportável. A tela de
+  comparação (Figura 5) exibe lado a lado o índice comunitário e o IIP de cada setor, as posições nos dois rankings, a
+  correlação de Spearman com interpretação textual e o destaque dos setores em que as posições divergem muito.
+</p>
+<figure>
+  <figcaption>Figura 5 – Comparação entre o índice comunitário e o LIRAa por setor</figcaption>
+  <div class="shots"><img src="capturas/liraa.png" style="width:15.5cm;height:7cm;object-position:center 21%" alt="" /></div>
+  <p class="source">Fonte: elaborado pelos autores (2026), com setores e LIRAa fictícios.</p>
+</figure>
+<p>
+  Com os dados fictícios e aleatórios de demonstração, a correlação obtida foi ρ = −0,36. Esse valor <b>não constitui
+  resultado epidemiológico</b>: ele apenas demonstra que o cálculo e a interpretação funcionam. A medida passa a ter
+  significado quando aplicada aos setores e aos levantamentos reais da vigilância municipal.
+</p>
+
+<h2>4.5 Testes automatizados</h2>
+<p>
+  O sistema conta com 164 testes automatizados, distribuídos conforme a Tabela 2. Todos foram executados com sucesso no
+  ambiente com PostgreSQL/PostGIS. O fluxo completo também foi verificado manualmente: registro, aviso por e-mail,
+  atendimento, encerramento com foto, pergunta ao morador, contestação e retorno à fila.
+</p>
+<div class="tablewrap">
+  <p class="tcap">Tabela 2 – Testes automatizados por área</p>
+  <table>
+    <tr><th>Área verificada</th><th class="num">Testes</th></tr>
+    <tr><td>Registro, permissões, acompanhamento e notificação (API)</td><td class="num">24</td></tr>
+    <tr><td>Ofuscação da localização no mapa público</td><td class="num">16</td></tr>
+    <tr><td>Remoção de metadados e validação de fotos</td><td class="num">9</td></tr>
+    <tr><td>Fórmula de risco, coeficientes e detecção de ponto crônico</td><td class="num">19</td></tr>
+    <tr><td>Fila, encerramento, confirmação do morador, "eu também vi", calor e indicadores</td><td class="num">19</td></tr>
+    <tr><td>Fluxo de situações e importação de pontos sensíveis</td><td class="num">18</td></tr>
+    <tr><td>Prazos, Spearman, importação de LIRAa e setores (unidade)</td><td class="num">25</td></tr>
+    <tr><td>Contador público, documento da ouvidoria, setores e LIRAa (integração)</td><td class="num">10</td></tr>
+    <tr><td>Aplicativo: validação do formulário, mapa, calor e escalas de cor</td><td class="num">24</td></tr>
+    <tr><th>Total</th><th class="num">164</th></tr>
+  </table>
+  <p class="source">Fonte: elaborado pelos autores (2026).</p>
+</div>
+<p>
+  A verificação também revelou defeitos que foram corrigidos durante o desenvolvimento. Entre eles: a validação de
+  e-mail impedia o login dos usuários de teste; uma falha momentânea de conexão encerrava a sessão do usuário, o que
+  afetaria quem está sem sinal no celular; abrir um marcador deslocava o mapa e fechava o próprio popup; e, sem o
+  desempate pelo risco sem teto, a fila voltava a ser ordenada por data.
+</p>
+
+<h1>5 Discussão</h1>
+<p>
+  Em relação a canais tradicionais e a plataformas genéricas de denúncia urbana, a principal contribuição do Sentinela
+  Urbano é tratar o registro como <b>dado de vigilância</b>, e não apenas como reclamação. Isso aparece em três
+  pontos: a prioridade passa a refletir risco real (tipo, tempo, reincidência e vulnerabilidade do entorno); o ciclo só
+  se fecha com a confirmação de quem registrou, o que reduz encerramentos administrativos sem ação efetiva; e a
+  ausência de resposta do poder público deixa de ser invisível. Como a solução funciona a partir do primeiro dia sem
+  contrato ou integração com o município, ela responde à principal fragilidade identificada no projeto original: o
+  risco de o sistema se reduzir a um repositório de fotos.
+</p>
+<p>
+  As limitações e os riscos levantados pela equipe foram tratados no próprio desenho do sistema. O registro de
+  propriedade alheia é mitigado pela orientação de fotografar da via pública e pela ocultação da localização exata. A
+  denúncia falsa é mitigada pelo teto de prioridade até a confirmação por outro morador. O viés de quem denuncia é
+  mitigado pela normalização por população. Ainda assim, persistem limitações:
+</p>
+<ul>
+  <li>os setores e os resultados do LIRAa usados na demonstração são fictícios, de modo que a validade do índice comunitário ainda não foi medida;</li>
+  <li>os pesos e o teto sem confirmação são valores iniciais, sem calibração empírica;</li>
+  <li>a área atendida é delimitada pelo retângulo envolvente do município, que inclui trechos de municípios vizinhos;</li>
+  <li>a categoria <i>healthcare</i> do OpenStreetMap inclui farmácias, cuja relevância como ponto sensível deve ser avaliada;</li>
+  <li>o sistema depende de acesso a smartphone e internet, o que a normalização atenua, mas não elimina.</li>
+</ul>
+
+<h1>6 Considerações finais</h1>
+<p>
+  Este trabalho apresentou o Sentinela Urbano, uma plataforma de vigilância comunitária de risco de arbovirose para
+  Montes Claros (MG), desenvolvida em três fases e verificada por 164 testes automatizados. Os objetivos propostos
+  foram atendidos no plano técnico: registro georreferenciado em menos de um minuto, fila priorizada por índice de
+  risco, confirmação da resolução pelo morador, exposição pública da ausência de resposta com documento para a
+  ouvidoria, e comparação com o LIRAa normalizada pela população.
+</p>
+<p>
+  Como trabalhos futuros, propõem-se duas etapas. A primeira amplia o sistema com os itens restantes do
+  <i>backlog</i>: registro sem conexão, sugestão de rota de visita, alerta de acúmulo de registros por área,
+  orientações de prevenção e aviso por aplicativos de mensagem. A segunda é o piloto em campo: publicação do sistema,
+  uso de servidor de mapas próprio, importação dos setores e dos levantamentos reais do LIRAa, revisão do termo de uso
+  com o município e operação em área delimitada, com divulgação junto à escola, à unidade básica de saúde e à
+  associação de moradores. Será a comparação com o LIRAa real, no piloto, que permitirá afirmar se a observação
+  organizada do morador antecipa e orienta a ação da vigilância.
+</p>
+
+<h1>Referências</h1>
+<div class="refs">
+  <p>AGÊNCIA BRASIL. <b>Casos de dengue no Brasil caem 75% em 2026</b>. Brasília, 15 abr. 2026. Dados do Ministério da Saúde.</p>
+  <p>BRASIL. Lei nº 13.709, de 14 de agosto de 2018. Lei Geral de Proteção de Dados Pessoais (LGPD). <b>Diário Oficial da União</b>, Brasília, DF, 15 ago. 2018.</p>
+  <p>BRASIL. Ministério da Saúde. <b>Diretrizes nacionais para prevenção e controle de epidemias de dengue</b>. Brasília: Ministério da Saúde, 2009.</p>
+  <p>BRASIL. Ministério da Saúde. <b>Levantamento Rápido de Índices para <i>Aedes aegypti</i> (LIRAa) para vigilância entomológica do <i>Aedes aegypti</i> no Brasil</b>: metodologia para avaliação dos índices de Breteau e Predial e tipo de recipientes. Brasília: Ministério da Saúde, 2013.</p>
+  <p>GOODCHILD, M. F. Citizens as sensors: the world of volunteered geography. <b>GeoJournal</b>, v. 69, n. 4, p. 211-221, 2007.</p>
+  <p>LEAFLET. <b>Leaflet</b>: an open-source JavaScript library for interactive maps. Disponível em: https://leafletjs.com. Acesso em: 20 out. 2026.</p>
+  <p>NAÇÕES UNIDAS BRASIL. <b>Objetivo de Desenvolvimento Sustentável 3</b>: saúde e bem-estar. Disponível em: https://brasil.un.org/pt-br/sdgs/3. Acesso em: 20 out. 2026.</p>
+  <p>OPENSTREETMAP CONTRIBUTORS. <b>OpenStreetMap</b>. Disponível em: https://www.openstreetmap.org. Acesso em: 20 out. 2026.</p>
+  <p>PODER360. <b>Dengue bate recorde em 2024 com 6,6 mi de casos e 6.022 mortes</b>. [2025?]. Dados do Ministério da Saúde.</p>
+  <p>POSTGIS PROJECT. <b>PostGIS documentation</b>. Disponível em: https://postgis.net/documentation/. Acesso em: 20 out. 2026.</p>
+  <p>SPEARMAN, C. The proof and measurement of association between two things. <b>The American Journal of Psychology</b>, v. 15, n. 1, p. 72-101, 1904.</p>
+</div>
+
+</body>
+</html>

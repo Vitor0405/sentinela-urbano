@@ -1,0 +1,15 @@
+{
+  "name": "sentinela-docs-pdf",
+  "private": true,
+  "description": "Gera os PDFs de documentação (artigo e resumo) a partir de HTML, com o Chrome sem interface.",
+  "type": "module",
+  "scripts": {
+    "capturas": "node capturas.mjs",
+    "artigo": "node render-a4.mjs artigo.html ../Sentinela_Urbano_artigo.pdf",
+    "resumo": "node render-a4.mjs resumo-artigo.html ../Sentinela_Urbano_resumo_artigo.pdf",
+    "relatorio": "node render-a4.mjs relatorio.html ../Sentinela_Urbano_relatorio_atualizacao.pdf"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.12.0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "codigo": "S01", "nome": "Centro", "populacao": 18500 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.875, -16.730], [-43.858, -16.730], [-43.858, -16.713], [-43.875, -16.713], [-43.875, -16.730]]]
+      }
+    }
+  ]
+}

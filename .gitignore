@@ -1,0 +1,14 @@
+.env
+node_modules/
+dist/
+dev-dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+uploads/
+backups/
+
+# Configuração local do Claude Code (pré-visualização nesta máquina)
+.claude/

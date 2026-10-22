@@ -1,0 +1,88 @@
+# Ambiente de desenvolvimento do Sentinela Urbano.
+# Valores padrão funcionam sem .env; para sobrescrever, copie .env.example para .env.
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: sentinela
+      POSTGRES_USER: sentinela
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinela}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # Só este arquivo: montar a pasta inteira esconderia os scripts do PostGIS.
+      - ./db/init/20-test-database.sql:/docker-entrypoint-initdb.d/20-test-database.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sentinela -d sentinela"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: ./api
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql+psycopg://sentinela:${POSTGRES_PASSWORD:-sentinela}@db:5432/sentinela
+      TEST_DATABASE_URL: postgresql+psycopg://sentinela:${POSTGRES_PASSWORD:-sentinela}@db:5432/sentinela_test
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me-in-production-0123456789}
+      UPLOAD_DIR: /data/uploads
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      PREFECTURE_EMAIL: ${PREFECTURE_EMAIL:-vigilancia@prefeitura.test}
+      PUBLIC_WEB_URL: ${PUBLIC_WEB_URL:-http://localhost:5173}
+      PRIVACY_GRID_REF_LAT: ${PRIVACY_GRID_REF_LAT:--16.72}
+      # Município de Montes Claros (MG), relação OSM 314620.
+      SERVICE_AREA_BBOX: ${SERVICE_AREA_BBOX:--44.2107,-17.1458,-43.6665,-16.0845}
+      SERVICE_AREA_NAME: ${SERVICE_AREA_NAME:-Montes Claros (MG)}
+      SERVICE_AREA_OSM_RELATION: ${SERVICE_AREA_OSM_RELATION:-314620}
+      ALLOW_TEST_EMAIL_DOMAINS: ${ALLOW_TEST_EMAIL_DOMAINS:-true}
+      # Grupo de mensagens do setor: none | telegram | email (no dev, simula o grupo no Mailpit).
+      MESSAGING_PROVIDER: ${MESSAGING_PROVIDER:-email}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      MESSAGING_CHAT_ID: ${MESSAGING_CHAT_ID:-vigilancia-endemias}
+      SEED_ON_START: ${SEED_ON_START:-dev}
+      SEED_FAKE_COUNT: ${SEED_FAKE_COUNT:-60}
+      SEED_PASSWORD: ${SEED_PASSWORD:-sentinela123}
+      SEED_CENTER: ${SEED_CENTER:--16.7207,-43.8660}
+      # Bind mounts vindos do Windows não propagam eventos de arquivo.
+      WATCHFILES_FORCE_POLLING: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+      - uploads:/data/uploads
+
+  web:
+    build: ./web
+    depends_on:
+      - api
+    environment:
+      API_PROXY_TARGET: http://api:8000
+      VITE_USE_POLLING: "true"
+      # Vazio usa o padrão do código (tile.openstreetmap.org, só para dev).
+      VITE_TILE_URL: ${VITE_TILE_URL:-}
+      VITE_TILE_ATTRIBUTION: ${VITE_TILE_ATTRIBUTION:-}
+      VITE_MAP_CENTER: ${VITE_MAP_CENTER:--16.7207,-43.8660}
+      VITE_MAP_ZOOM: ${VITE_MAP_ZOOM:-14}
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web:/app
+      # node_modules do container (binários Linux), não os do Windows.
+      - /app/node_modules
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025" # interface web
+      - "1025:1025" # SMTP
+
+volumes:
+  db-data:
+  uploads:

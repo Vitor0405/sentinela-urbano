@@ -1,0 +1,20 @@
+# Production image: builds the PWA and serves it with Caddy (HTTPS, headers, /api proxy).
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+# Vite bakes VITE_* into the bundle at build time.
+ARG VITE_TILE_URL=""
+ARG VITE_TILE_ATTRIBUTION=""
+ARG VITE_MAP_CENTER="-16.7207,-43.8660"
+ARG VITE_MAP_ZOOM="14"
+ENV VITE_TILE_URL=$VITE_TILE_URL \
+    VITE_TILE_ATTRIBUTION=$VITE_TILE_ATTRIBUTION \
+    VITE_MAP_CENTER=$VITE_MAP_CENTER \
+    VITE_MAP_ZOOM=$VITE_MAP_ZOOM
+RUN npm run build
+
+FROM caddy:2-alpine
+COPY --from=build /app/dist /srv
+# Caddyfile: montado de deploy/Caddyfile pelo docker-compose.prod.yml

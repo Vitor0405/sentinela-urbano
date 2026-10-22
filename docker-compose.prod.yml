@@ -1,0 +1,116 @@
+# Production-like stack, runnable on this machine (no hosting needed):
+#   docker compose -f docker-compose.prod.yml up -d --build
+#   → https://localhost:8443  (local HTTPS certificate issued by Caddy)
+#
+# Differences from the development stack: built PWA (installable, real offline mode),
+# Caddy with HTTPS and security headers, API without auto-reload or public port,
+# automatic backups. Its own containers and volumes: the dev stack is untouched.
+#
+# APP_ENV=demo keeps test users and fictitious data for presentations.
+# APP_ENV=production refuses to start with development secrets (see docs/PUBLICACAO.md).
+name: sentinela-producao
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: sentinela
+      POSTGRES_USER: sentinela
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinela-demo}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sentinela -d sentinela"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    command: ["sh", "scripts/start-prod.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-demo}
+      DATABASE_URL: postgresql+psycopg://sentinela:${POSTGRES_PASSWORD:-sentinela-demo}@db:5432/sentinela
+      JWT_SECRET: ${JWT_SECRET:-demo-somente-local-troque-em-producao-0123456789abcdef}
+      UPLOAD_DIR: /data/uploads
+      PUBLIC_WEB_URL: ${PUBLIC_WEB_URL:-https://localhost:8443}
+      CORS_ORIGINS: ${CORS_ORIGINS:-["https://localhost:8443"]}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_USE_TLS: ${SMTP_USE_TLS:-false}
+      MAIL_FROM: ${MAIL_FROM:-Sentinela Urbano <nao-responda@sentinela.test>}
+      PREFECTURE_EMAIL: ${PREFECTURE_EMAIL:-vigilancia@prefeitura.test}
+      PRIVACY_GRID_REF_LAT: ${PRIVACY_GRID_REF_LAT:--16.72}
+      SERVICE_AREA_BBOX: ${SERVICE_AREA_BBOX:--44.2107,-17.1458,-43.6665,-16.0845}
+      SERVICE_AREA_NAME: ${SERVICE_AREA_NAME:-Montes Claros (MG)}
+      SERVICE_AREA_OSM_RELATION: ${SERVICE_AREA_OSM_RELATION:-314620}
+      ALLOW_TEST_EMAIL_DOMAINS: ${ALLOW_TEST_EMAIL_DOMAINS:-true}
+      MESSAGING_PROVIDER: ${MESSAGING_PROVIDER:-email}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      MESSAGING_CHAT_ID: ${MESSAGING_CHAT_ID:-vigilancia-endemias}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      SEED_PASSWORD: ${SEED_PASSWORD:-sentinela123}
+      SEED_CENTER: ${SEED_CENTER:--16.7207,-43.8660}
+    volumes:
+      - uploads:/data/uploads
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_TILE_URL: ${VITE_TILE_URL:-}
+        VITE_TILE_ATTRIBUTION: ${VITE_TILE_ATTRIBUTION:-}
+        VITE_MAP_CENTER: ${VITE_MAP_CENTER:--16.7207,-43.8660}
+        VITE_MAP_ZOOM: ${VITE_MAP_ZOOM:-14}
+    depends_on:
+      - api
+    environment:
+      # Several addresses: "https://localhost:8443, https://192.168.0.10:8443" (LAN phones).
+      SITE_ADDRESS: ${SITE_ADDRESS:-https://localhost:8443}
+      TLS_DIRECTIVE: ${TLS_DIRECTIVE:-tls internal}
+      CSP_TILE_HOSTS: ${CSP_TILE_HOSTS:-https://tile.openstreetmap.org https://*.tile.openstreetmap.org}
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    restart: unless-stopped
+
+  backup:
+    image: postgis/postgis:16-3.4
+    entrypoint: ["sh", "/backup.sh", "loop"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGUSER: sentinela
+      PGPASSWORD: ${POSTGRES_PASSWORD:-sentinela-demo}
+      PGDATABASE: sentinela
+      BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS:-24}
+      BACKUP_KEEP: ${BACKUP_KEEP:-14}
+    volumes:
+      - ./deploy/backup.sh:/backup.sh:ro
+      - ./backups:/backups
+      - uploads:/data/uploads:ro
+    restart: unless-stopped
+
+  # Demo only: catches the e-mails. In production, point SMTP_* to the real server.
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8026:8025"
+    restart: unless-stopped
+
+volumes:
+  db-data:
+  uploads:
+  caddy-data:

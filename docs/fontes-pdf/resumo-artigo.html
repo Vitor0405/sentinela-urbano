@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Sentinela Urbano: resumo do artigo</title>
+<style>
+  @page { size: A4; margin: 30mm 20mm 20mm 30mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.3; color: #111; text-align: justify; hyphens: auto; }
+  p { margin: 0 0 0.45em; text-indent: 1.25cm; }
+  .title { text-align: center; font-weight: bold; font-size: 13pt; text-transform: uppercase; line-height: 1.25; margin: 0 0 4px; text-indent: 0; }
+  .kind { text-align: center; font-size: 11pt; margin: 0 0 12px; text-indent: 0; }
+  .authors { text-align: center; font-size: 11pt; line-height: 1.35; margin-bottom: 14px; text-indent: 0; }
+  h1 { font-size: 12pt; font-weight: bold; text-transform: uppercase; margin: 14px 0 6px; break-after: avoid; }
+  .kw { text-indent: 0; margin-top: 4px; }
+  ul { margin: 0 0 0.45em 1.25cm; padding: 0; }
+  li { margin-bottom: 2px; }
+  .eq { text-align: center; font-style: italic; text-indent: 0; margin: 6px 0 8px; }
+  .refs p { text-indent: 0; text-align: left; font-size: 10.5pt; line-height: 1.15; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<p class="title">Sentinela Urbano: vigilância comunitária georreferenciada de risco de arbovirose com priorização por índice de risco e validação frente ao LIRAa</p>
+<p class="kind">Resumo do artigo · Projeto Integrador · Engenharia da Computação</p>
+<p class="authors">João Vitor Rodrigues Alves Medeiros · Luiz Gustavo Andrade França · Vinicius Carvalho Fonseca<br />Israel Rodrigues de Souza Teles · Samuel Silva Santos</p>
+
+<h1>Introdução</h1>
+<p>
+  Em 2024, o Brasil registrou cerca de 6,6 milhões de casos prováveis de dengue e 6.022 mortes, o pior resultado da
+  série histórica. Os focos do <i>Aedes aegypti</i> costumam ser percebidos primeiro pelo morador, mas os canais
+  existentes não geram foto, localização nem protocolo, e o agente de endemias faz varredura sem saber onde estão os
+  focos. O problema não é a falta de informação, e sim a sua dispersão.
+</p>
+
+<h1>Objetivo</h1>
+<p>
+  Desenvolver uma plataforma de vigilância comunitária, inicialmente para Montes Claros (MG), que transforme a observação
+  do morador em dado georreferenciado, priorizado por risco e acompanhável até a resolução, e que permita verificar sua
+  validade frente ao Levantamento Rápido de Índices para <i>Aedes aegypti</i> (LIRAa). O trabalho se vincula ao ODS 3,
+  meta 3.3.
+</p>
+
+<h1>Metodologia</h1>
+<p>
+  O sistema foi construído em três fases incrementais, a partir do projeto original, do <i>backlog</i> de 14 histórias
+  e de um documento de melhorias. A arquitetura reúne um aplicativo web progressivo (React e Leaflet sobre
+  OpenStreetMap), uma API em Python/FastAPI e um banco PostgreSQL com PostGIS, tudo executado em Docker. A prioridade
+  de atendimento é dada pelo índice:
+</p>
+<p class="eq">risco = peso<sub>tipo</sub> × dias<sub>aberto</sub> × (1 + 0,5 × reincidências a até 30 m) × (1,5 se houver escola ou unidade de saúde a até 200 m)</p>
+<p>
+  O índice é calculado pelo banco a cada consulta, com coeficientes configuráveis. Os pontos sensíveis vêm do
+  OpenStreetMap. Três riscos foram tratados no próprio desenho do sistema:
+</p>
+<ul>
+  <li><b>Privacidade:</b> o mapa público mostra a localização em uma grade fixa de ~100 m, e as fotos têm os metadados removidos.</li>
+  <li><b>Denúncia falsa:</b> a prioridade tem um teto até que outro morador confirme a ocorrência.</li>
+  <li><b>Viés de cobertura:</b> os índices por setor são sempre divididos pela população.</li>
+</ul>
+<p>
+  A concordância entre o índice comunitário por setor e o Índice de Infestação Predial do LIRAa é medida pela
+  correlação de postos de Spearman.
+</p>
+
+<h1>Resultados</h1>
+<p>As três fases foram concluídas e verificadas com 164 testes automatizados (140 no servidor e 24 no aplicativo):</p>
+<ul>
+  <li><b>Fase 1:</b> registro com foto e GPS em menos de um minuto, com ou sem conta; protocolo e link de acompanhamento; mapa público; aviso automático por e-mail à prefeitura.</li>
+  <li><b>Fase 2:</b> fila do agente ordenada por risco; identificação de pontos crônicos ("notificar proprietário"); encerramento com foto obrigatória; confirmação da resolução pelo morador; "eu também vi"; mapa de calor ponderado pelo risco; 148 pontos sensíveis importados.</li>
+  <li><b>Fase 3:</b> contador público de dias sem resposta da prefeitura; documento em PDF para a Ouvidoria após o prazo; indicadores por setor por 1.000 habitantes; importação do LIRAa e comparação lado a lado com a correlação de Spearman; painel do gestor.</li>
+</ul>
+<p>
+  O fluxo completo foi verificado no ambiente real. Os setores e o LIRAa da demonstração são fictícios, de modo que a
+  correlação obtida (ρ = −0,36) apenas comprova o funcionamento do cálculo e não constitui resultado epidemiológico.
+</p>
+
+<h1>Considerações finais</h1>
+<p>
+  O Sentinela Urbano demonstra a viabilidade técnica de um ciclo completo de vigilância comunitária: o morador registra,
+  a prefeitura é avisada, o agente atende por risco real, o morador confirma e o silêncio do poder público se torna
+  visível. As principais limitações são a ausência de dados reais do LIRAa e de calibração dos pesos. Os próximos passos
+  são duas etapas. A primeira amplia o sistema: registro sem conexão, rota de visita do agente, alertas de acúmulo,
+  orientações de prevenção e aviso por aplicativos de mensagem. A segunda é o piloto em Montes Claros, com publicação
+  do sistema, dados reais da vigilância e revisão da LGPD. A validação final depende da comparação com o LIRAa real.
+</p>
+<p class="kw"><b>Palavras-chave:</b> arboviroses; vigilância participativa; geoprocessamento; <i>Aedes aegypti</i>; saúde digital.</p>
+
+<h1>Referências</h1>
+<div class="refs">
+  <p>BRASIL. Ministério da Saúde. <b>Levantamento Rápido de Índices para <i>Aedes aegypti</i> (LIRAa) para vigilância entomológica do <i>Aedes aegypti</i> no Brasil</b>. Brasília: Ministério da Saúde, 2013.</p>
+  <p>GOODCHILD, M. F. Citizens as sensors: the world of volunteered geography. <b>GeoJournal</b>, v. 69, n. 4, p. 211-221, 2007.</p>
+  <p>PODER360. <b>Dengue bate recorde em 2024 com 6,6 mi de casos e 6.022 mortes</b>. [2025?]. Dados do Ministério da Saúde.</p>
+  <p>SPEARMAN, C. The proof and measurement of association between two things. <b>The American Journal of Psychology</b>, v. 15, n. 1, p. 72-101, 1904.</p>
+</div>
+
+</body>
+</html>

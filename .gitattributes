@@ -1,0 +1,7 @@
+# Scripts rodam dentro de containers Linux: CRLF quebraria o shebang.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary
+*.pptx binary
+*.woff2 binary

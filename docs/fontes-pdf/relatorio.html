@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Sentinela Urbano: relatório de atualização</title>
+<style>
+  @page { size: A4; margin: 22mm 18mm 18mm 18mm; }
+  * { box-sizing: border-box; }
+  :root { --green: #0f5e4f; --green-soft: #e7f0ec; --ink: #1b2422; --muted: #55605d; --line: #d9dfdc; --amber: #9a5b00; --amber-soft: #fbf1e1; --red: #a8261d; --red-soft: #fbe9e7; }
+  body { margin: 0; font-family: 'Segoe UI', Calibri, Arial, sans-serif; font-size: 10.5pt; line-height: 1.45; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; color: var(--green); line-height: 1.2; }
+  h2 { font-size: 16pt; margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--green); break-after: avoid; }
+  h3 { font-size: 12pt; margin: 14px 0 4px; break-after: avoid; }
+  p { margin: 0 0 7px; }
+  ul { margin: 0 0 8px; padding-left: 18px; }
+  li { margin-bottom: 3px; }
+  code { font-family: Consolas, 'Courier New', monospace; font-size: 9pt; background: #f1f3f2; padding: 0 3px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.5pt; break-inside: avoid; }
+  th { text-align: left; background: var(--green); color: #fff; padding: 5px 7px; font-weight: 600; }
+  td { padding: 5px 7px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:nth-child(even) td { background: #f7f9f8; }
+  .ok { color: var(--green); font-weight: 700; }
+
+  .cover { height: 245mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+  .cover .brand { font-family: Georgia, serif; font-size: 13pt; color: var(--green); font-weight: 700; letter-spacing: .5px; }
+  .cover h1 { font-size: 30pt; margin: 0 0 10px; }
+  .cover .sub { font-size: 13pt; color: var(--muted); max-width: 140mm; }
+  .cover .band { background: var(--green); color: #fff; padding: 16px 18px; border-radius: 8px; }
+  .cover .band b { display: block; font-size: 11pt; margin-bottom: 4px; }
+  .cover .meta { font-size: 10pt; color: var(--muted); line-height: 1.6; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 14px; break-inside: avoid; }
+  .kpi { border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; background: #fff; }
+  .kpi b { display: block; font-family: Georgia, serif; font-size: 18pt; color: var(--green); line-height: 1.1; }
+  .kpi span { font-size: 8.5pt; color: var(--muted); }
+
+  .callout { border-left: 4px solid var(--green); background: var(--green-soft); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 8px 0 12px; break-inside: avoid; }
+  .callout.amber { border-color: var(--amber); background: var(--amber-soft); }
+
+  .feature { break-inside: avoid; margin-bottom: 8px; }
+  .feature h3 { margin-top: 10px; }
+  .tag { display: inline-block; font-family: 'Segoe UI', Arial, sans-serif; font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 1px 6px; border-radius: 10px; vertical-align: 2px; margin-left: 4px; }
+  .tag.new { background: var(--green-soft); color: var(--green); }
+  .tag.auth { background: var(--amber-soft); color: var(--amber); }
+  .tag.pay { background: var(--red-soft); color: var(--red); }
+  .tag.tech { background: #eceef7; color: #3c4a8a; }
+
+  figure { margin: 6px 0 12px; break-inside: avoid; text-align: center; }
+  figure img { border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+  figcaption { font-size: 8.5pt; color: var(--muted); margin-top: 3px; }
+  .row { display: flex; gap: 10px; align-items: flex-start; break-inside: avoid; }
+  .row figure { flex: 1; margin-top: 0; }
+  .phone img { height: 82mm; width: auto; }
+  .wide img { width: 100%; }
+
+  .missing { border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; margin-bottom: 8px; break-inside: avoid; }
+  .missing h3 { margin: 0 0 4px; }
+  .missing p { margin: 0 0 4px; }
+  .missing .how { font-size: 9.5pt; color: var(--muted); }
+  .pagebreak { break-before: page; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="brand">SENTINELA URBANO</div>
+  <div>
+    <h1>Relatório de atualização</h1>
+    <p class="sub">O que foi feito nas fases 4 e 5, como foi testado e o que ainda falta para o piloto em Montes Claros (MG).</p>
+  </div>
+  <div class="band">
+    <b>Situação em 21 de outubro de 2026</b>
+    As fases 1 a 4 estão concluídas. Da fase 5, ficou pronto tudo o que dá para fazer sem pagar nada e sem publicar na
+    internet. O sistema roda completo na máquina local, em duas versões: a de desenvolvimento e uma cópia fiel da de
+    produção, com HTTPS, aplicativo instalável e backup automático. O que falta depende de contratação, de dados da
+    prefeitura ou de uma autorização sua.
+  </div>
+  <div class="meta">
+    Projeto Integrador · Engenharia da Computação · ODS 3, meta 3.3<br />
+    João Vitor Rodrigues Alves Medeiros · Luiz Gustavo Andrade França · Vinicius Carvalho Fonseca ·
+    Israel Rodrigues de Souza Teles · Samuel Silva Santos
+  </div>
+</section>
+
+<h2>1. Resumo</h2>
+<div class="kpis">
+  <div class="kpi"><b>187</b><span>testes automatizados da API, todos passando</span></div>
+  <div class="kpi"><b>31</b><span>testes do aplicativo web, todos passando</span></div>
+  <div class="kpi"><b>12</b><span>funcionalidades novas nas fases 4 e 5</span></div>
+  <div class="kpi"><b>0</b><span>violações de segurança (CSP) ou erros de página na verificação</span></div>
+</div>
+<p>
+  Desde a apresentação das três primeiras fases, o Sentinela Urbano ganhou as ampliações do <i>backlog</i> (fase 4) e a
+  preparação para o piloto (fase 5). Na fase 4 entraram o registro sem internet, a rota de visita do agente, o alerta
+  de acúmulo de focos, as dicas de prevenção, o escopo de trabalho por agente e o aviso por grupo de mensagens. Na fase
+  5 entraram a versão de produção local com HTTPS, o backup com teste de restauração, as contas de equipe por convite,
+  a recuperação de senha, os direitos do titular pela LGPD, o limite de uso contra abuso e a tela de configurações do
+  índice de risco.
+</p>
+<div class="callout">
+  <b>Para apresentar:</b> suba a versão de produção local
+  (<code>docker compose -f docker-compose.prod.yml up -d --build</code>), abra <b>https://localhost:8443</b> e siga o
+  roteiro de 15 minutos em <code>docs/DEMONSTRACAO.md</code>. Antes de cada apresentação, o comando
+  <code>reset-demo</code> devolve os dados de demonstração ao estado inicial.
+</div>
+
+<h2>2. O que foi atualizado na fase 4: ampliações do backlog</h2>
+
+<div class="feature">
+  <h3>Registro sem internet <span class="tag new">novo</span></h3>
+  <p>
+    Sem sinal, o registro fica guardado no próprio celular, com as fotos, e é enviado sozinho quando a conexão volta.
+    Cada registro leva um identificador gerado no aparelho, por isso um reenvio nunca cria uma ocorrência duplicada.
+    A hora em que o morador viu o problema também é guardada. Registros com mais de 7 dias são recusados, para não
+    acionar a equipe por uma foto velha. Os tipos de risco e a área atendida ficam em cache, e o formulário abre mesmo
+    sem rede.
+  </p>
+</div>
+<div class="row">
+  <figure class="phone"><img src="capturas/f4-offline-guardado.png" /><figcaption>Registro guardado sem internet</figcaption></figure>
+  <figure class="phone"><img src="capturas/f4-envios.png" /><figcaption>Envios pendentes deste aparelho</figcaption></figure>
+  <figure class="phone"><img src="capturas/f4-prevencao.png" /><figcaption>Dicas de prevenção, disponíveis offline</figcaption></figure>
+</div>
+
+<div class="feature">
+  <h3>Rota de visita do agente <span class="tag new">novo</span></h3>
+  <p>
+    O sistema primeiro escolhe <b>quais</b> ocorrências visitar (as 12 de maior risco da fila do agente) e depois
+    <b>em que ordem</b> (o menor caminho a partir da posição dele). Assim, a proximidade nunca passa na frente do risco.
+    As distâncias hoje são em linha reta.
+  </p>
+</div>
+<figure class="wide"><img src="capturas/f4-rota.png" /><figcaption>Rota de visita: paradas numeradas por ordem, escolhidas por risco</figcaption></figure>
+
+<div class="feature">
+  <h3>Alerta de acúmulo <span class="tag new">novo</span></h3>
+  <p>
+    Três focos ativos do mesmo tipo a até 150 m, em 7 dias, geram um alerta para os gestores (e-mail, grupo de
+    mensagens e painel). Novos registros na mesma área não repetem o alerta. Os valores podem ser ajustados na tela de
+    configurações.
+  </p>
+</div>
+<figure class="wide"><img src="capturas/f4-alertas.png" /><figcaption>Alerta de acúmulo no painel da gestão</figcaption></figure>
+
+<div class="feature">
+  <h3>Prevenção, escopo do agente e grupo de mensagens <span class="tag new">novo</span></h3>
+  <ul>
+    <li><b>Prevenção:</b> após cada registro, o morador recebe dicas curtas para aquele tipo de foco. Há também uma página fixa, que funciona sem internet.</li>
+    <li><b>Escopo do agente:</b> o gestor marca os setores e os tipos de risco de cada agente. Fila, rota e mapa passam a mostrar só o que é da competência dele. Sem marcação, o agente vê o município inteiro.</li>
+    <li><b>Grupo de mensagens (Telegram):</b> focos de risco alto (≥ 7,5) são avisados na hora; os demais vão num resumo diário, para o grupo não virar spam. O código está pronto, mas falta o bot real (veja a seção 6). Na demonstração, as mensagens aparecem no Mailpit.</li>
+  </ul>
+</div>
+
+<h2>3. O que foi atualizado na fase 5: preparação para o piloto</h2>
+
+<div class="feature">
+  <h3>Versão de produção rodando na máquina <span class="tag new">novo</span></h3>
+  <p>
+    Uma segunda pilha (<code>docker-compose.prod.yml</code>) reproduz o servidor real, sem atrapalhar a de
+    desenvolvimento:
+  </p>
+  <ul>
+    <li><b>Aplicativo:</b> compilado e instalável no celular ("adicionar à tela inicial").</li>
+    <li><b>Servidor web Caddy:</b> HTTPS (certificado local agora; Let's Encrypt automático quando houver domínio) e cabeçalhos de segurança, incluindo uma política de conteúdo (CSP) que só aceita o código do próprio site e o servidor de mapas.</li>
+    <li><b>API:</b> sem porta exposta.</li>
+    <li><b>Backup:</b> serviço próprio, automático.</li>
+  </ul>
+  <p>
+    A variável <code>APP_ENV</code> separa desenvolvimento, demonstração e produção. Em produção, a API <b>se recusa a
+    subir</b> se encontrar uma configuração insegura: senha padrão do login, e-mails de teste, endereço sem HTTPS ou o
+    servidor de e-mail de testes.
+  </p>
+</div>
+
+<div class="feature">
+  <h3>Backup com teste de restauração <span class="tag new">novo</span></h3>
+  <p>
+    O backup é diário e guarda as 14 cópias mais recentes do banco e das fotos. Um arquivo só passa a contar como
+    backup quando está completo. O comando <code>verify</code> restaura a cópia num banco separado e confere o
+    conteúdo. No teste, voltaram 63 ocorrências, 5 usuários e a versão 0005 do banco. Durante esse teste apareceu um
+    defeito: um backup vazio, feito antes de o banco ficar pronto, foi registrado como sucesso. O script foi
+    corrigido e testado de novo.
+  </p>
+</div>
+
+<div class="feature">
+  <h3>Contas de equipe e senhas <span class="tag new">novo</span></h3>
+  <ul>
+    <li><b>Convite:</b> o gestor convida agentes por e-mail. O convidado cria a própria senha por um link que só funciona uma vez e vale 3 dias, então a senha nunca passa pelo gestor.</li>
+    <li><b>Desativar:</b> o gestor pode desativar uma conta sem apagar o histórico de atendimentos. A sessão da pessoa cai na hora.</li>
+    <li><b>Esqueci minha senha:</b> link de uso único, válido por 1 hora. A tela responde igual exista ou não a conta, para não revelar quem está cadastrado.</li>
+    <li><b>Trocar senha:</b> encerra as sessões abertas em outros aparelhos.</li>
+  </ul>
+</div>
+<div class="row">
+  <figure style="flex:2.1"><img src="capturas/f5-equipe.png" style="width:100%" /><figcaption>Gestão → Equipe: convite por e-mail, desativação e escopo por setor</figcaption></figure>
+  <figure class="phone" style="flex:1"><img src="capturas/f5-conta.png" /><figcaption>Minha conta: senha, dados e exclusão</figcaption></figure>
+</div>
+
+<div class="feature">
+  <h3>LGPD: direitos do titular <span class="tag new">novo</span></h3>
+  <ul>
+    <li><b>Baixar meus dados:</b> o morador baixa um arquivo com tudo o que o sistema guarda sobre ele (direito de acesso, art. 18).</li>
+    <li><b>Excluir conta:</b> a exclusão exige a senha. Nome, e-mail e senha são apagados. As ocorrências ficam no sistema, <b>sem identificação</b>, porque o foco continua sendo informação de saúde pública.</li>
+  </ul>
+</div>
+
+<div class="feature">
+  <h3>Limite de uso, configurações e acessibilidade <span class="tag new">novo</span></h3>
+  <ul>
+    <li><b>Limite de uso por IP:</b> 20 registros por hora, 30 "eu também vi" por hora, 10 tentativas de login a cada 5 minutos e 5 cadastros por hora. Isso protege contra robôs e tentativas de adivinhar senhas.</li>
+    <li><b>Configurações:</b> o gestor ajusta pesos e coeficientes do índice de risco pela tela, dentro de faixas seguras. A calibragem com a vigilância deixa de depender de programador.</li>
+    <li><b>Acessibilidade:</b> uma medição automática encontrou três campos sem rótulo no formulário de registro e o mapa sem título para leitores de tela. Os dois problemas foram corrigidos.</li>
+    <li><b>Correção no modo offline:</b> se o morador nunca tivesse aberto o formulário com internet, ele abria sem tipos de risco. Agora o app guarda esses dados ao iniciar.</li>
+  </ul>
+</div>
+<div class="row">
+  <figure style="flex:2.1"><img src="capturas/f5-configuracoes.png" style="width:100%" /><figcaption>Gestão → Configurações: calibragem do índice de risco</figcaption></figure>
+  <figure class="phone" style="flex:1"><img src="capturas/f5-offline-pwa.png" /><figcaption>App instalado, reaberto sem internet</figcaption></figure>
+</div>
+
+<div class="feature">
+  <h3>Documentação nova</h3>
+  <ul>
+    <li><code>docs/PUBLICACAO.md</code>: passo a passo para o servidor real, incluindo:
+      <ul>
+        <li>checklist do <code>.env</code> e domínio com HTTPS;</li>
+        <li>teste no celular pela rede local;</li>
+        <li>backup e restauração;</li>
+        <li>tarefas agendadas;</li>
+        <li>lista do que conferir antes de abrir ao público.</li>
+      </ul>
+    </li>
+    <li><code>docs/DEMONSTRACAO.md</code>: roteiro de apresentação de 15 minutos, com os perfis morador, agente e gestora, e tabela de problemas comuns.</li>
+    <li><code>README.md</code>, <code>CLAUDE.md</code> e <code>docs/decisoes.md</code> atualizados com as decisões e os comandos das fases 4 e 5.</li>
+  </ul>
+</div>
+
+<h2>4. Como foi verificado</h2>
+<table>
+  <tr><th style="width:38%">Verificação</th><th>Resultado</th></tr>
+  <tr><td>Testes da API (pytest, com PostGIS real)</td><td><span class="ok">187 passando.</span> Inclui 16 testes novos da fase 5: senha, convite, LGPD, limite de uso, configurações e produção insegura.</td></tr>
+  <tr><td>Testes do app web (Vitest)</td><td><span class="ok">31 passando.</span> Inclui a fila offline.</td></tr>
+  <tr><td>Verificação de tipos, padrão de código e compilação</td><td><span class="ok">Sem erros.</span></td></tr>
+  <tr><td>Aplicativo instalável (PWA)</td><td><span class="ok">OK:</span> service worker ativo; manifesto com nome, modo <i>standalone</i> e 3 ícones.</td></tr>
+  <tr><td>App fechado e reaberto sem internet</td><td><span class="ok">OK:</span> o formulário abre com os 8 tipos de risco.</td></tr>
+  <tr><td>Esqueci minha senha (e-mail → link → nova senha)</td><td><span class="ok">OK:</span> termina com a usuária logada.</td></tr>
+  <tr><td>Convite de agente (gestor → e-mail → senha)</td><td><span class="ok">OK:</span> a agente cai direto na fila, com 39 itens.</td></tr>
+  <tr><td>Política de segurança (CSP) e erros de página</td><td><span class="ok">Nenhuma violação.</span></td></tr>
+  <tr><td>Backup e restauração</td><td><span class="ok">OK:</span> 63 ocorrências, 5 usuários e migração 0005 restaurados.</td></tr>
+  <tr><td>Reinício da demonstração (<code>reset-demo</code>)</td><td><span class="ok">OK:</span> 5 usuários, 63 ocorrências e 16 setores fictícios recriados. Em produção, o comando é recusado.</td></tr>
+</table>
+
+<h3>Desempenho e acessibilidade, simulando um celular em 4G lento</h3>
+<p>
+  O Lighthouse não pôde ser instalado nesta máquina, por um erro de certificado do npm. No lugar dele, um script
+  próprio (<code>medicao-desempenho.mjs</code>) abriu cada página pela primeira vez, sem cache, numa tela de celular
+  com rede limitada:
+</p>
+<table>
+  <tr><th>Página</th><th>1º conteúdo na tela</th><th>Maior conteúdo</th><th>Dados baixados</th><th>Campos sem rótulo</th></tr>
+  <tr><td>Mapa (/)</td><td>1,8 s</td><td>3,8 s</td><td>597 KiB</td><td>0 de 13</td></tr>
+  <tr><td>Registrar</td><td>1,5 s</td><td>1,5 s</td><td>438 KiB</td><td>0 de 13 (antes: 3)</td></tr>
+  <tr><td>Prevenção</td><td>1,7 s</td><td>1,8 s</td><td>251 KiB</td><td>sem campos</td></tr>
+  <tr><td>Entrar</td><td>1,5 s</td><td>1,5 s</td><td>250 KiB</td><td>0 de 2</td></tr>
+  <tr><td>Acompanhar</td><td>1,4 s</td><td>1,4 s</td><td>250 KiB</td><td>0 de 1</td></tr>
+</table>
+<p>
+  Todas as páginas declaram o idioma português e têm título. Nenhum botão ou link ficou sem nome, e nenhuma imagem
+  ficou sem texto alternativo. O mapa é a página mais pesada, por causa das imagens das ruas, que vêm do
+  OpenStreetMap. Um servidor de mapas próprio (seção 6) reduziria esse tempo.
+</p>
+
+<h2>5. Onde está cada coisa</h2>
+<table>
+  <tr><th style="width:38%">Endereço ou arquivo</th><th>Para quê</th></tr>
+  <tr><td>https://localhost:8443</td><td>Versão de produção local, a que deve ser usada para apresentar.</td></tr>
+  <tr><td>http://localhost:8026</td><td>Mailpit da versão de produção: e-mails à prefeitura, convites, senhas e mensagens do grupo simulado.</td></tr>
+  <tr><td>http://localhost:5173 e 8025</td><td>Versão de desenvolvimento e o Mailpit dela.</td></tr>
+  <tr><td><code>backups/</code></td><td>Cópias automáticas do banco e das fotos.</td></tr>
+  <tr><td><code>docs/DEMONSTRACAO.md</code></td><td>Roteiro da apresentação.</td></tr>
+  <tr><td><code>docs/PUBLICACAO.md</code></td><td>Como publicar de verdade.</td></tr>
+  <tr><td>Usuários de teste</td><td><code>morador@</code>, <code>agente@</code>, <code>gestor@</code>, <code>vizinho1@</code> e <code>vizinha2@sentinela.test</code>, todos com a senha <code>sentinela123</code>.</td></tr>
+</table>
+
+<h2>6. O que falta</h2>
+<p>
+  Tudo o que dava para fazer de graça e sem publicar já foi feito. Os itens abaixo estão agrupados pelo que cada um
+  exige para sair do papel.
+</p>
+
+<h3 style="margin-top:12px">6.1 Depende de uma autorização sua (sem custo)</h3>
+<div class="missing">
+  <h3>Túnel público para teste externo <span class="tag auth">autorização</span></h3>
+  <p>
+    Um túnel gratuito, como o Cloudflare Tunnel, daria um endereço HTTPS público temporário. Com ele, qualquer pessoa
+    testaria pelo celular, de qualquer lugar, sem instalar certificado. Não foi feito porque expõe o computador na
+    internet enquanto estiver ligado.
+  </p>
+  <p class="how">Alternativa já documentada, sem expor nada: teste pela rede Wi-Fi local (seção 5 do <code>PUBLICACAO.md</code>).</p>
+</div>
+<div class="missing">
+  <h3>Servidor de mapas próprio <span class="tag auth">autorização</span></h3>
+  <p>
+    Hoje as imagens das ruas vêm do <code>tile.openstreetmap.org</code>, cujas regras não permitem uso intenso em
+    produção. Um servidor próprio exige baixar o recorte de Minas Gerais do OpenStreetMap (algumas centenas de MB).
+    Não foi feito porque o download precisa da sua autorização.
+  </p>
+  <p class="how">A configuração já está preparada: <code>VITE_TILE_URL</code> e <code>CSP_TILE_HOSTS</code>.</p>
+</div>
+<div class="missing">
+  <h3>Bot real do Telegram <span class="tag auth">autorização</span></h3>
+  <p>
+    O código está pronto e testado. Falta criar o bot no @BotFather e um grupo com a equipe. O token do bot é uma
+    credencial e deve ser criado e colado no <code>.env</code> pelo responsável, nunca por terceiros.
+  </p>
+  <p class="how">Passo a passo na seção "Grupo de mensagens" do <code>README.md</code>.</p>
+</div>
+
+<h3>6.2 Depende de contratação ou da prefeitura</h3>
+<table>
+  <tr><th style="width:30%">Item</th><th>O que é preciso</th></tr>
+  <tr><td>Hospedagem <span class="tag pay">custo</span></td><td>Um servidor Linux com Docker (VPS pequena ou servidor da prefeitura). A pilha de produção sobe nele sem mudanças no código.</td></tr>
+  <tr><td>Domínio <span class="tag pay">custo</span></td><td>Endereço próprio (por exemplo, um subdomínio <code>.gov.br</code> da prefeitura). O HTTPS sai sozinho pelo Caddy.</td></tr>
+  <tr><td>E-mail institucional</td><td>SMTP da prefeitura ou serviço transacional, para os e-mails não caírem no spam. Mais o endereço oficial da vigilância ambiental.</td></tr>
+  <tr><td>Setores e LIRAa reais</td><td>Os polígonos dos setores com população (GeoJSON) e os resultados do LIRAa da Secretaria de Saúde. Os importadores já existem; hoje os dados são fictícios.</td></tr>
+  <tr><td>Revisão jurídica (LGPD)</td><td>Revisão do termo de uso e indicação do encarregado de dados da prefeitura.</td></tr>
+  <tr><td>Calibragem com a vigilância</td><td>Validar com os agentes os pesos dos tipos, os coeficientes do risco e os textos de prevenção. A tela de configurações já permite os ajustes sem programador.</td></tr>
+  <tr><td>Teste com usuários reais</td><td>Piloto com alguns agentes e moradores, para medir uso real, tempo de resposta e concordância com o LIRAa.</td></tr>
+</table>
+
+<h3>6.3 Melhorias técnicas para depois do piloto</h3>
+<table>
+  <tr><th style="width:30%">Melhoria</th><th>Por quê</th></tr>
+  <tr><td>Rota pelas ruas (OSRM) <span class="tag tech">técnica</span></td><td>A rota usa distância em linha reta. Um roteador de ruas, gratuito e com dados do OpenStreetMap, daria o caminho real.</td></tr>
+  <tr><td>Limite do município por polígono <span class="tag tech">técnica</span></td><td>Hoje a área atendida é um retângulo em volta de Montes Claros. O contorno exato do município evitaria aceitar pontos nas bordas, fora dele.</td></tr>
+  <tr><td>Limite de uso compartilhado <span class="tag tech">técnica</span></td><td>O limite fica na memória de um único processo, o que basta para o piloto. Para rodar em várias máquinas, é preciso Redis.</td></tr>
+  <tr><td>Auditoria Lighthouse <span class="tag tech">técnica</span></td><td>Rodar no servidor ou noutra máquina, onde o npm funcione, para confirmar a medição própria.</td></tr>
+  <tr><td>Teste em celulares reais <span class="tag tech">técnica</span></td><td>Câmera, GPS e instalação foram verificados no navegador simulando celular. Falta repetir em aparelhos Android e iPhone, pela rede local ou pelo túnel.</td></tr>
+  <tr><td>Monitoramento <span class="tag tech">técnica</span></td><td>Aviso automático se a API cair ou se o backup falhar (por exemplo, um serviço gratuito de <i>uptime</i>).</td></tr>
+</table>
+
+<h2>7. Próximos passos sugeridos</h2>
+<ol>
+  <li>Apresentar a versão de produção local seguindo o <code>docs/DEMONSTRACAO.md</code>.</li>
+  <li>Decidir sobre as três autorizações da seção 6.1. O túnel e o bot do Telegram são os que mais ajudam numa demonstração com o público.</li>
+  <li>Levar à prefeitura o pedido dos setores, do LIRAa, do e-mail institucional e da revisão do termo de uso.</li>
+  <li>Com servidor e domínio definidos, seguir a lista final do <code>docs/PUBLICACAO.md</code> e iniciar o piloto.</li>
+</ol>
+
+</body>
+</html>
